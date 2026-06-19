@@ -663,6 +663,11 @@
         }
       };
 
+      const clearAppsScriptUrl = () => {
+        setSettings((prev) => ({ ...prev, appsScriptUrl: "" }));
+        setMessage("Đã xóa URL cũ. Hãy dán URL mới vào!");
+      };
+
       const readJsonSafe = async (response) => {
         const text = await response.text();
         if (!text) return {};
@@ -1076,14 +1081,44 @@
                   <input className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none text-sm font-bold" placeholder="Số điện thoại" value={settings.phone} onChange={(e) => setSettings((prev) => ({ ...prev, phone: e.target.value }))} />
                 </section>
 
-                <section className="glass-card p-5 space-y-4">
-                  <h3 className="font-black text-slate-800 text-lg">Google Sheets / Apps Script</h3>
-                  <input
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none text-sm font-bold"
-                    placeholder="Dán URL Web App Apps Script..."
-                    value={settings.appsScriptUrl || ""}
-                    onChange={(e) => setSettings((prev) => ({ ...prev, appsScriptUrl: e.target.value }))}
-                  />
+                <section className="glass-card p-5 space-y-4 border-2 border-sky-400">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-black text-sky-800 text-lg">Đổi liên kết Google Sheets mới</h3>
+                    <span className="flex h-3 w-3 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+                    </span>
+                  </div>
+
+                  {/* THÔNG BÁO THÔNG MINH CHO NGƯỜI DÙNG */}
+                  {settings.appsScriptUrl ? (
+                    <div className="p-3.5 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-800 font-bold leading-5">
+                      💡 <strong>Mẹo nhỏ:</strong> Nếu bạn vừa tạo một bản copy Google Sheet mới, hãy bấm nút <strong>"Xóa & Reset Link"</strong> màu đỏ dưới đây trước khi dán link mới để tránh dữ liệu lưu về bảng cũ!
+                    </div>
+                  ) : (
+                    <div className="p-3.5 bg-sky-50 rounded-2xl border border-sky-200 text-xs text-sky-800 font-bold leading-5">
+                      ✨ <strong>Hãy dán đường link mới:</strong> Hãy dán URL Web App Apps Script mới của bạn vào ô dưới đây để thiết lập kết nối.
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <input
+                      className="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none text-sm font-bold focus:border-sky-500 shadow-sm"
+                      placeholder="Dán URL Web App Apps Script mới..."
+                      value={settings.appsScriptUrl || ""}
+                      onChange={(e) => setSettings((prev) => ({ ...prev, appsScriptUrl: e.target.value }))}
+                    />
+
+                    {settings.appsScriptUrl && (
+                      <button
+                        onClick={clearAppsScriptUrl}
+                        className="w-full bg-rose-500 text-white font-black py-2.5 rounded-xl text-xs uppercase tracking-wider btn-press hover:bg-rose-600 transition-colors"
+                      >
+                        🗑️ Xóa & Reset Link (Để đổi link mới)
+                      </button>
+                    )}
+                  </div>
+
                   <div className="text-[11px] text-slate-500 font-bold leading-5">
                     Dùng cho kết nối hai chiều với Google Sheets. Apps Script cần hỗ trợ `action=getAll` để đọc dữ liệu và `action=pushAll` để ghi dữ liệu.
                   </div>
